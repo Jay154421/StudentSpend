@@ -1,17 +1,19 @@
 <?php
 require_once './Database/dbconfig.php';
 $user_id = $_SESSION['user_session'];
-$amount = $user->getTotalAllowance($user_id);
-
+$isTotalAllowance = $user->isTotalAllowance($user_id);
 
 // if (is_string($_POST['amount'])) {
 //     header("Location: test.php");
 // }
-
 if (isset($_POST['btn-save'])) {
     $amountTotal = $_POST['amount'];
-    $user->setTotalAllowance($amountTotal, $user_id);
-    $user->redirect('custombudget.php');
+    if (!$isTotalAllowance) {
+        $user->setTotalAllowance($amountTotal, $user_id);
+        $user->redirect('custombudget.php');
+    } else {
+        echo "<p style='color:red;'>Total allowance already set!</p>";
+    }
 }
 ?>
 
@@ -26,7 +28,7 @@ if (isset($_POST['btn-save'])) {
             <div class="modal-body">
                 <div class="input-user">
                     <label>Amount</label>
-                    <input type="text" name="amount" />
+                    <input type="text" name="amount" required />
                 </div>
             </div>
             <hr />

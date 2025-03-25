@@ -1,57 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/setting.css" />
-    <title>Setting</title>
-  </head>
-  <body>
-    <div style="display: flex; justify-content: space-between">
-      <nav>
-        <div class="left-nav">
-          <div class="profile">
-            <div><img src="asset/profile.png" alt="" /></div>
-            <div>Christian P. Forrest</div>
-          </div>
-          <div class="nav-list">
-            <a href="dashboard.php">Dashboard</a>
-            <a href="custombudget.php">Custom Budget</a>
-            <a class="active" href="setting.php">Setting</a>
-          </div>
-          <a href="">Log Out</a>
-        </div>
-      </nav>
+<?php include_once('layout/header_setting.php') ?>
 
-      <div class="main">
-        <h3>Setting</h3>
+<div class="main">
+  <h3>Setting</h3>
 
-        <div class="setting-profile">
-          <div>
-            <img src="asset/profile.png" alt="" />
-          </div>
-          <div class="btn-change_photo">
-            <button>Change Photo</button>
-          </div>
-        </div>
-        <div class="text">
-          <div>Full Name</div>
-          <div class="sub-text">Christian154</div>
-        </div>
-        <hr />
-        <div class="text">
-          <div>Email</div>
-          <div class="sub-text">Christian.Forrest@gmail.com</div>
-        </div>
-        <hr />
-        <div class="text">
-          <div>Username</div>
-          <div class="sub-text">Christian154</div>
-        </div>
-        <hr />
-
-        <button class="btn-change_password">Change Password</button>
-      </div>
+  <div class="setting-profile">
+    <div>
+      <?php if ($photo) { ?>
+        <img class="photo" src="./image/<?= $photo['photo'] ?>" alt="<?= $photo['photo'] ?>">
+      <?php } else { ?>
+        <img src="asset/profile.png" alt="" />
+      <?php } ?>
     </div>
-  </body>
-</html>
+    <div class="btn-change_photo">
+      <button class="modal-button" href="#myModal1">Upload Photo</button>
+      <?php include('components/UploadPhoto.php') ?>
+    </div>
+  </div>
+  <div class="text">
+    <div>Full Name</div>
+    <div class="sub-text">Christian154</div>
+  </div>
+  <hr />
+  <div class="text">
+    <div>Email</div>
+    <div class="sub-text">Christian.Forrest@gmail.com</div>
+  </div>
+  <hr />
+  <div class="text">
+    <div>Username</div>
+    <div class="sub-text">Christian154</div>
+  </div>
+  <hr />
+
+  <button class="btn-change_password modal-button" href="#myModal2">Change Password</button>
+
+  <?php include_once('components/change_password.php') ?>
+</div>
+
+<?php include_once('layout/footer_setting.php') ?>

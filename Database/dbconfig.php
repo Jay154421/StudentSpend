@@ -12,5 +12,11 @@ try {
      echo $e->getMessage();
 }
 
-include_once 'Controller/Total_Allowance.Controller.php';
+include 'Controller/Total_Allowance.Controller.php';
 $user = new totalAllowance($DB_con);
+
+include_once 'Controller/Budget_Category_Name.Controller.php';
+$budget = new budget($DB_con);
+
+include_once 'Controller/Expense.Controller.php';
+$expense = new Expense($DB_con);

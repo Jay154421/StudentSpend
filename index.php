@@ -3,6 +3,19 @@
 <head>
   <title>StudentSpend</title>
   <link rel="stylesheet" href="css/login.css" />
+  <style>
+    @keyframes transitionIn {
+      from {
+        opacity: 0;
+        transform: rotateX(-10deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: rotateX(0);
+      }
+    }
+  </style>
 </head>
 
 <body>

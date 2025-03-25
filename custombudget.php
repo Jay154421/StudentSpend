@@ -37,44 +37,51 @@
 
 <!-- pop up the category list -->
 <div class="container">
-  <div class="box">
-    <div class="top">
-      <div style="font-weight: 700">Personal</div>
-      <div>₱500.00 <label>Budgeted</label></div>
+  <?php while ($category = $all_category->fetch(PDO::FETCH_ASSOC)): ?>
+    <div class="box">
+      <div class="top">
+        <div style="font-weight: 700"><?= $category['budget_category'] ?></div>
+        <div>₱<?= $category['amount'] ?> <label>Budgeted</label></div>
+      </div>
+      <div class="circle">
+        <div class="inner-circle"></div>
+      </div>
+      <div class="bottom">
+        <div>₱50 spent</div>
+        <div>₱450 remaining</div>
+      </div>
     </div>
-    <div class="circle">
-      <div class="inner-circle"></div>
-    </div>
-    <div class="bottom">
-      <div>₱50 spent</div>
-      <div>₱450 remaining</div>
-    </div>
-  </div>
+  <?php endwhile; ?>
 </div>
 
 
 <div class="budget">
-  <div>Total Budget : <?= $amount['amount'] ?></div>
-  <div>Remaining : ₱4,550</div>
+  <div class="budget-header">
+    <div>Total Budget: <?= $amount ? $amount['amount'] : "0" ?></div>
+    <div>Remaining : <?php echo "5001236"; ?></div>
+  </div>
 </div>
 
 <!-- table of list expenses  -->
-<div style="margin: 0 15px">
-  <table>
+<div class="table-container">
+  <table class="table-header">
     <tr>
       <th>Budget Category Name</th>
       <th>Expense Name</th>
       <th>Amount</th>
       <th>Date</th>
     </tr>
-    <tr>
-      <td>Personal</td>
-      <td>Ballpen</td>
-      <td>₱50</td>
-      <td>8/12/2024</td>
-    </tr>
+    <?php while ($expenses = $all_expense->fetch(PDO::FETCH_ASSOC)): ?>
+      <tr>
+        <td><?= $expenses['category'] ?></td>
+        <td><?= $expenses['name'] ?></td>
+        <td><?= $expenses['amount'] ?></td>
+        <td><?= $expenses['date'] ?></td>
+      </tr>
+    <?php endwhile; ?>
   </table>
 </div>
+
 </div>
 </div>
 

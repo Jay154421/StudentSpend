@@ -24,7 +24,6 @@ class USER
             $stmt->bindparam(":email", $email);
             $stmt->bindparam(":password", $new_password);
             $stmt->execute();
-
             return $stmt;
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -121,5 +120,77 @@ class USER
         $stmt->execute(array(":user_id" => $user_id));
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user;
+    }
+
+    public function uploadPhoto($image, $user_id)
+    {
+
+        try {
+            $stmt = $this->db->prepare("INSERT INTO file(photo,user_id) VALUES(:photo,:user_id)");
+            $stmt->bindparam(":photo", $image);
+            $stmt->bindparam(":user_id", $user_id);
+            $stmt->execute();
+            return $stmt;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function changePhoto($image, $user_id)
+    {
+        try {
+            $stmt = $this->db->prepare("UPDATE file SET  photo=:photo WHERE user_id=:user_id");
+            $stmt->bindparam(":photo", $image);
+            $stmt->bindparam(":user_id", $user_id);
+            $stmt->execute();
+            return $stmt;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function profilePhoto($user_id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM file WHERE user_id=:user_id");
+        $stmt->execute(array(":user_id" => $user_id));
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user;
+    }
+
+
+    public function changePassword($currentPassword, $newPassword)
+    {
+        // Check if the current password is correct
+        if (!$this->verifyPassword($currentPassword)) {
+            echo "<p style='color:red;'>Wrong password</p>";
+        }
+
+        // Hash the new password
+        $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        // Update the password in the database
+        $stmt = $this->db->prepare("UPDATE users SET password = :password WHERE user_id = :user_id");
+        $stmt->bindParam(':password', $hashedNewPassword);
+        $stmt->bindParam(':user_id', $_SESSION['user_session']);
+        $result = $stmt->execute();
+
+        if ($result) {
+            return true;
+        } else {
+            throw new Exception("Failed to update password");
+        }
+    }
+
+    private function verifyPassword($password)
+    {
+        $stmt = $this->db->prepare("SELECT password FROM users WHERE user_id = :user_id");
+        $stmt->bindParam(':user_id', $_SESSION['user_session']);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row && password_verify($password, $row['password'])) {
+            return true;
+        }
+        return false;
     }
 }
