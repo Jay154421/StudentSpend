@@ -1,0 +1,209 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 26, 2025 at 02:35 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.1.25
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `studentspend`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `budget`
+--
+
+CREATE TABLE `budget` (
+  `budget_id` int(11) NOT NULL,
+  `budget_category` varchar(250) NOT NULL,
+  `amount` int(100) NOT NULL,
+  `user_id` int(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `budget`
+--
+
+INSERT INTO `budget` (`budget_id`, `budget_category`, `amount`, `user_id`) VALUES
+(17, 'Personal', 500, 6);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expense`
+--
+
+CREATE TABLE `expense` (
+  `expense_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `amount` int(100) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp(),
+  `user_id` int(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `expense`
+--
+
+INSERT INTO `expense` (`expense_id`, `name`, `amount`, `category`, `date`, `user_id`) VALUES
+(16, 'Jay', 150, 'Personal', '2025-03-15', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `file`
+--
+
+CREATE TABLE `file` (
+  `id` int(11) NOT NULL,
+  `photo` varchar(150) NOT NULL,
+  `user_id` int(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `total_allowance`
+--
+
+CREATE TABLE `total_allowance` (
+  `total_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `amount` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `total_allowance`
+--
+
+INSERT INTO `total_allowance` (`total_id`, `user_id`, `amount`) VALUES
+(39, 6, '5000');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(250) NOT NULL,
+  `username` varchar(250) NOT NULL,
+  `fullname` varchar(250) NOT NULL,
+  `email` varchar(250) NOT NULL,
+  `password` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `fullname`, `email`, `password`) VALUES
+(6, 'Jay154421', 'Jay Bodiongan', 'jaybodiongan0@gmail.com', '$2y$10$mcNxuQUAPNvO/SL/9wvpsuE94gB5DhHTKcKzvqWEli1bWwWXc0/2.'),
+(7, '123456', '123123', '123456@gmail.com', '$2y$10$SzH4U9LHF/jOCZyiJqnIDel47kP9SCEo7IPdq8pck/oY0g6za4jZS'),
+(9, 'jay963', 'Jay Bodiongan', 'jaybodiongan12@gmail.com', '$2y$10$O8/jnGDQqTj.JsP7cQUU2OfbKrIzxa5NsI3Jbaclv81Wv2zYgxWeO');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `budget`
+--
+ALTER TABLE `budget`
+  ADD PRIMARY KEY (`budget_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `expense`
+--
+ALTER TABLE `expense`
+  ADD PRIMARY KEY (`expense_id`);
+
+--
+-- Indexes for table `file`
+--
+ALTER TABLE `file`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `total_allowance`
+--
+ALTER TABLE `total_allowance`
+  ADD PRIMARY KEY (`total_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `budget`
+--
+ALTER TABLE `budget`
+  MODIFY `budget_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `expense`
+--
+ALTER TABLE `expense`
+  MODIFY `expense_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `file`
+--
+ALTER TABLE `file`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `total_allowance`
+--
+ALTER TABLE `total_allowance`
+  MODIFY `total_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `budget`
+--
+ALTER TABLE `budget`
+  ADD CONSTRAINT `budget_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `total_allowance`
+--
+ALTER TABLE `total_allowance`
+  ADD CONSTRAINT `total_allowance_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

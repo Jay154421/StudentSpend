@@ -18,17 +18,17 @@
   </div>
   <div class="text">
     <div>Full Name</div>
-    <div class="sub-text">Christian154</div>
+    <div class="sub-text"><?= $name['fullname'] ?></div>
   </div>
   <hr />
   <div class="text">
     <div>Email</div>
-    <div class="sub-text">Christian.Forrest@gmail.com</div>
+    <div class="sub-text"><?= $name['email'] ?></div>
   </div>
   <hr />
   <div class="text">
     <div>Username</div>
-    <div class="sub-text">Christian154</div>
+    <div class="sub-text"><?= $name['username'] ?></div>
   </div>
   <hr />
 
