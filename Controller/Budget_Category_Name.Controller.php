@@ -17,11 +17,30 @@ class budget extends USER
         }
     }
 
+    public function getSpentExpense($user_id, $budget_category)
+    {
+        global $DB_con;
+        $stmt = $DB_con->prepare("SELECT SUM(amount) as total_spent FROM expense WHERE user_id = :user_id AND category = :budget_category");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':budget_category', $budget_category);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total_spent'] ?? 0;
+    }
+
     public function getBudget($user_id)
     {
         $stmt = $this->db->prepare("SELECT * FROM budget WHERE user_id=:user_id");
         $stmt->execute(array(":user_id" => $user_id));
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user;
+    }
+
+    public function countAllBudgets($user_id)
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM budget WHERE user_id=:user_id");
+        $stmt->execute(array(":user_id" => $user_id));
+        $total = $stmt->fetchColumn();
+        return $total;
     }
 }

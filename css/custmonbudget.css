@@ -303,10 +303,8 @@ label {
 .inner-circle {
   position: absolute;
   background-color: var(--primary-color);
-  border: 1px solid #1f1e1e;
   border-radius: 24px;
   height: 15px;
-  width: 90px;
 }
 
 .bottom {

@@ -25,4 +25,12 @@ class Expense extends USER
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user;
     }
+
+    public function countAllExpense($user_id)
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM expense WHERE user_id=:user_id");
+        $stmt->execute(array(":user_id" => $user_id));
+        $total = $stmt->fetchColumn();
+        return $total;
+    }
 }

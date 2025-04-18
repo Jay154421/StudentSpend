@@ -1,97 +1,79 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progreso de Presupuesto</title>
+    <title>Budget Progress</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #191919;
-            color: white;
-            margin: 0;
-            text-align: center;
-            padding: 0;
-        }
-
         .container {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 20px 52px;
-            background-color: #212121;
-            border-radius: 16px;
+            max-height: 219px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 0 40px;
+            height: 390px;
         }
 
         .box {
-            margin: 20px 0;
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
+            border: 1px solid black;
+            border-radius: 20px;
+            height: 120px;
+            width: 418px;
+            margin: 10px 5px;
+            box-shadow: 5px 7px 2px 2px rgba(0, 0, 0, 0.1);
+            -webkit-box-shadow: 5px 7px 2px 2px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 5px 7px 2px 2px rgba(0, 0, 0, 0.1);
         }
 
         .top {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            height: 20px;
+            margin: 8px 10px;
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .circle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
+            position: relative;
+            border: 1px solid #1f1e1e;
+            border-radius: 24px;
+            height: 15px;
+            margin: 20px 10px 0;
         }
 
         .inner-circle {
-            width: 100px;
-            height: 100px;
-            background-color: #444;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            position: absolute;
+            background-color: #00ff99;
+            border: 1px solid #1f1e1e;
+            border-radius: 24px;
+            height: 15px;
+            width: 90px;
         }
 
         .bottom {
             display: flex;
             justify-content: space-between;
+            font-size: 12px;
+            margin: 5px 15px;
         }
 
-        .progress-bar-container {
-            width: 100%;
-            background-color: #444;
-            border-radius: 5px;
-            overflow: hidden;
-            height: 10px;
-            margin-top: 10px;
+        .budget {
+            margin: 60px 20px 0 20px;
+            font-size: 14px;
         }
 
-        .progress-bar {
-            height: 10px;
-            width: 0%;
-            background-color: #00ff99;
-            transition: width 0.5s;
-        }
-
-        .message {
-            display: none;
-            font-size: 18px;
-            margin-top: 10px;
-            color: #ffcc00;
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
 
 <body>
-
     <div class="container" id="budget-container">
         <!-- Categories will be dynamically added here by JavaScript -->
     </div>
@@ -150,16 +132,8 @@
 
             const innerCircle = document.createElement("div");
             innerCircle.classList.add("inner-circle");
+            innerCircle.style.width = `${calculateProgress(category.spent, category.amount)}%`;
 
-            const progressBarContainer = document.createElement("div");
-            progressBarContainer.classList.add("progress-bar-container");
-
-            const progressBar = document.createElement("div");
-            progressBar.classList.add("progress-bar");
-            progressBar.style.width = `${calculateProgress(category.spent, category.amount)}%`;
-
-            progressBarContainer.appendChild(progressBar);
-            innerCircle.appendChild(progressBarContainer);
             circle.appendChild(innerCircle);
 
             // Bottom section
@@ -167,11 +141,11 @@
             bottom.classList.add("bottom");
 
             const spentExpense = document.createElement("div");
-            spentExpense.innerHTML = `₱${category.spent} <span>Spent</span>`;
+            spentExpense.textContent = `₱${category.spent}`;
 
             const remainingExpense = document.createElement("div");
             const remaining = category.amount - category.spent;
-            remainingExpense.innerHTML = `₱${remaining} <span>Remaining</span>`;
+            remainingExpense.textContent = `₱${remaining}`;
 
             bottom.appendChild(spentExpense);
             bottom.appendChild(remainingExpense);

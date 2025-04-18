@@ -12,7 +12,12 @@ if (isset($_POST['btn-save'])) {
         $user->setTotalAllowance($amountTotal, $user_id);
         $user->redirect('custombudget.php');
     } else {
-        echo "<p style='color:red;'>Total allowance already set!</p>";
+        echo "<script> Swal.fire({
+        title: 'Total Allowance',
+        text: 'Total allowance already set!',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+    });</script>";
     }
 }
 ?>
