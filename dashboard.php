@@ -1,4 +1,3 @@
-<!-- <?php include_once('layout/header_dashboard.php') ?> -->
 <?php
 require_once './Database/dbconfig.php';
 
@@ -75,60 +74,55 @@ foreach ($expenses as $expense) {
 </head>
 
 <body>
-  <div style="display: flex; justify-content: space-between">
-    <nav>
-      <div class="left-nav">
-        <div class="profile">
-          <div>
-            <?php if ($photo) { ?>
-              <img class="nav-image" class="photo" src="./image/<?= $photo['photo'] ?>">
-            <?php } else { ?>
-              <img src="asset/profile.png" alt="" />
-            <?php } ?>
-          </div>
-          <div><?= $name['username'] ?></div>
+  <nav>
+    <div class="left-nav">
+      <div class="profile">
+        <div>
+          <?php if ($photo) { ?>
+            <img class="nav-image" class="photo" src="./image/<?= $photo['photo'] ?>">
+          <?php } else { ?>
+            <img src="asset/profile.png" alt="" />
+          <?php } ?>
         </div>
-        <div class="nav-list">
-          <a class="active" href="dashboard.php">Dashboard</a>
-          <a href="custombudget.php">Custom Budget</a>
-          <a href="setting.php">Setting</a>
-        </div>
-        <a href="components/logout.php">Log Out</a>
+        <div><?= $name['username'] ?></div>
       </div>
-    </nav>
-
-
-    <div class="main">
-      <h3>Dashboard</h3>
-      <div class="container">
-        <div class="card-budget">
-          <div>Number of Budget</div>
-          <div style="font-weight: 600;"> <?= $totalBudgets ?></div>
-        </div>
-        <div class="card-expense">
-          <div>Number of Expense</div>
-          <div style="font-weight: 600;"><?= $totalExpense ?></div>
-        </div>
+      <div class="nav-list">
+        <a class="active" href="dashboard.php">Dashboard</a>
+        <a href="custombudget.php">Custom Budget</a>
+        <a href="setting.php">Setting</a>
       </div>
+      <a href="components/logout.php">Log Out</a>
+    </div>
+  </nav>
 
-
-      <!-- View mode dropdown -->
-      <div class="view-mode-select" style="margin-bottom: 20px;">
-        <label for="viewMode">View Mode:</label>
-        <select id="viewMode">
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
+  <div class="main">
+    <h3>Dashboard</h3>
+    <div class="container">
+      <div class="card-budget">
+        <div>Number of Budget</div>
+        <div style="font-weight: 600;"> <?= $totalBudgets ?></div>
       </div>
-
-      <!-- Chart container -->
-      <div style="display: flex; justify-content: center; margin: 0 40px 0 90px;   width: 60%; height: 400px;">
-        <canvas id="expenseChart"></canvas>
+      <div class="card-expense">
+        <div>Number of Expense</div>
+        <div style="font-weight: 600;"><?= $totalExpense ?></div>
       </div>
     </div>
 
+    <!-- View mode dropdown -->
+    <div class="view-mode-select">
+      <label for="viewMode">View Mode:</label>
+      <select id="viewMode">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+
+    <!-- Chart container -->
+    <div class="chart-container">
+      <canvas id="expenseChart"></canvas>
+    </div>
   </div>
-  </div>
+
   <!-- Chart.js Data Script -->
   <script>
     const chartData = {
@@ -158,6 +152,7 @@ foreach ($expenses as $expense) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           y: {
             beginAtZero: true
@@ -177,5 +172,7 @@ foreach ($expenses as $expense) {
 </body>
 
 </html>
+</div>
+</body>
 
-<!-- <?php include_once('layout/footer_dashboard.php') ?> -->
+</html>

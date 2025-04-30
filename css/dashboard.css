@@ -14,6 +14,7 @@ body {
   padding: 0;
   height: 100vh;
   font-size: 1.1em;
+  display: flex;
 }
 
 nav {
@@ -55,10 +56,6 @@ nav {
   border-radius: 15px;
 }
 
-h3 {
-  margin-left: 20px;
-}
-
 a {
   text-decoration: none;
   color: black;
@@ -84,51 +81,42 @@ a:hover {
   margin: 70px 80px 30px;
   border-radius: 20px;
 }
+
 .nav-image {
   width: 140px;
-  height: 110px;
+  height: 140px;
   border-radius: 50%;
   margin: 0 auto;
+  object-fit: cover;
 }
 
 .container {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
-  margin: 0 30px 40px 0px;
+  margin: 30px 20px;
+  margin-left: 20px auto;
+  gap: 20px;
 }
 
-.card-budget {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 30px 0 30px;
-  padding: 20px 40px 20px 40px;
-  background-color: var(--secondary-color);
-  border-radius: 10px;
-}
-
+.card-budget,
 .card-expense {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin: 0 30px 0 30px;
-  padding: 20px 40px 20px 40px;
+  padding: 20px 40px;
   background-color: var(--secondary-color);
   border-radius: 10px;
+  min-width: 200px;
 }
-
-/* view-mode-select.css */
 
 .view-mode-select {
   display: flex;
   justify-content: flex-start;
-  text-align: center;
   align-items: center;
   gap: 10px;
-  margin-left: 20px;
+  margin: 20px;
 }
 
 .view-mode-select label {
@@ -137,21 +125,62 @@ a:hover {
   font-weight: bold;
 }
 
+h3 {
+  margin-left: 20px;
+}
+
 .view-mode-select select {
-  width: 20%;
-  padding: 5px 10px;
+  width: 150px;
+  padding: 8px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
 }
 
-.view-mode-select select option {
-  padding: 5px;
+.chart-container {
+  width: 90%;
+  height: 330px;
+  margin: 20px auto;
+  padding: 20px;
 }
 
-@media (max-width: 480px) {
-  .view-mode-select select {
+@media (max-width: 1024px) {
+  nav {
+    width: 250px;
+  }
+
+  .main {
+    width: calc(100% - 290px);
+    margin-left: 270px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  nav {
     width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .main {
+    width: 90%;
+    margin: 20px auto;
+    height: auto;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card-budget,
+  .card-expense {
+    width: 100%;
+    margin-bottom: 15px;
   }
 }
