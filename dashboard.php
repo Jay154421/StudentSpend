@@ -69,62 +69,111 @@ foreach ($expenses as $expense) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title>Dashboard</title>
 </head>
 
 <body>
-  <nav>
-    <div class="left-nav">
-      <div class="profile">
-        <div>
+  <div class="app-container">
+    <nav class="modern-nav">
+      <div class="nav-header">
+        <div class="profile">
           <?php if ($photo) { ?>
-            <img class="nav-image" class="photo" src="./image/<?= $photo['photo'] ?>">
+            <img class="nav-image" src="./image/<?= $photo['photo'] ?>">
           <?php } else { ?>
-            <img src="asset/profile.png" alt="" />
+            <img src="asset/profile.png" alt="Profile" />
           <?php } ?>
+          <div class="profile-info">
+            <h4><?= $name['username'] ?></h4>
+            <span>Premium User</span>
+          </div>
         </div>
-        <div><?= $name['username'] ?></div>
+        <button class="nav-toggle" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
       <div class="nav-list">
-        <a class="active" href="dashboard.php">Dashboard</a>
-        <a href="custombudget.php">Custom Budget</a>
-        <a href="setting.php">Setting</a>
+        <a href="dashboard.php" class="active">
+          <i class="fas fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="custombudget.php">
+          <i class="fas fa-wallet"></i>
+          <span>Custom Budget</span>
+        </a>
+        <a href="setting.php">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+        <a href="components/logout.php" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Out</span>
+        </a>
       </div>
-      <a href="components/logout.php">Log Out</a>
-    </div>
-  </nav>
+    </nav>
 
-  <div class="main">
-    <h3>Dashboard</h3>
-    <div class="container">
-      <div class="card-budget">
-        <div>Number of Budget</div>
-        <div style="font-weight: 600;"> <?= $totalBudgets ?></div>
+    <main class="main-content">
+      <div class="header">
+        <h1>Dashboard</h1>
+        <div class="date-display">
+          <span><?= date('F j, Y') ?></span>
+        </div>
       </div>
-      <div class="card-expense">
-        <div>Number of Expense</div>
-        <div style="font-weight: 600;"><?= $totalExpense ?></div>
+
+      <div class="stats-container">
+        <div class="stat-card budget-card">
+          <div class="stat-icon">
+            <i class="fas fa-piggy-bank"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Number of Budgets</h3>
+            <p><?= $totalBudgets ?></p>
+          </div>
+        </div>
+        <div class="stat-card expense-card">
+          <div class="stat-icon">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Number of Expenses</h3>
+            <p><?= $totalExpense ?></p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- View mode dropdown -->
-    <div class="view-mode-select">
-      <label for="viewMode">View Mode:</label>
-      <select id="viewMode">
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-      </select>
-    </div>
-
-    <!-- Chart container -->
-    <div class="chart-container">
-      <canvas id="expenseChart"></canvas>
-    </div>
+      <div class="chart-section">
+        <div class="chart-header">
+          <h2>Expense Analytics</h2>
+          <div class="view-mode-select">
+            <div class="custom-select">
+              <select id="viewMode">
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+              <div class="select-arrow">
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="expenseChart"></canvas>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <!-- Chart.js Data Script -->
   <script>
+    // Toggle mobile menu
+    const navToggle = document.querySelector('.nav-toggle');
+    const navList = document.querySelector('.nav-list');
+    
+    navToggle.addEventListener('click', () => {
+      navList.classList.toggle('show');
+    });
+
+    // Chart data and initialization remains the same
     const chartData = {
       weekly: {
         labels: <?= json_encode(array_keys($weeklyTotals)) ?>,
@@ -137,7 +186,6 @@ foreach ($expenses as $expense) {
     };
 
     const ctx = document.getElementById('expenseChart').getContext('2d');
-
     let currentChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -145,17 +193,41 @@ foreach ($expenses as $expense) {
         datasets: [{
           label: 'Expense Amount',
           data: chartData.weekly.data,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
+          backgroundColor: 'rgba(6, 171, 153, 0.6)',
+          borderColor: 'rgba(6, 171, 153, 1)',
+          borderWidth: 1,
+          borderRadius: 6,
+          borderSkipped: false,
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#333',
+            bodyColor: '#666',
+            borderColor: '#eee',
+            borderWidth: 1,
+            padding: 12,
+            usePointStyle: true,
+          }
+        },
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(200, 238, 234, 0.3)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
           }
         }
       }
@@ -170,9 +242,4 @@ foreach ($expenses as $expense) {
     });
   </script>
 </body>
-
-</html>
-</div>
-</body>
-
 </html>

@@ -11,6 +11,7 @@ class USER
     public function redirect($url)
     {
         header("Location: $url");
+        exit();
     }
 
     public function register($username, $fullname, $email, $password)
