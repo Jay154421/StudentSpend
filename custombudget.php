@@ -118,7 +118,7 @@ if ($amount) {
                     <?php if ($photo) { ?>
                         <img class="nav-image" src="./image/<?= htmlspecialchars($photo['photo']) ?>">
                     <?php } else { ?>
-                        <img src="asset/profile.png" alt="Profile">
+                        <img class="nav-image" src="asset/profile.png" alt="Profile">
                     <?php } ?>
                     <div class="profile-info">
                         <h4><?= htmlspecialchars($name['username']) ?></h4>

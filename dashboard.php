@@ -82,7 +82,7 @@ foreach ($expenses as $expense) {
           <?php if ($photo) { ?>
             <img class="nav-image" src="./image/<?= $photo['photo'] ?>">
           <?php } else { ?>
-            <img src="asset/profile.png" alt="Profile" />
+            <img class="nav-image" src="asset/profile.png" alt="Profile" />
           <?php } ?>
           <div class="profile-info">
             <h4><?= $name['username'] ?></h4>
@@ -168,7 +168,7 @@ foreach ($expenses as $expense) {
     // Toggle mobile menu
     const navToggle = document.querySelector('.nav-toggle');
     const navList = document.querySelector('.nav-list');
-    
+
     navToggle.addEventListener('click', () => {
       navList.classList.toggle('show');
     });
@@ -242,4 +242,5 @@ foreach ($expenses as $expense) {
     });
   </script>
 </body>
+
 </html>
