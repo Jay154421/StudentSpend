@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['btn-budget'])) {
         $budget_category = trim($_POST['budget_category']);
         $budget_amount = trim($_POST['amount']);
-        
+
         if (empty($budget_category)) {
             $_SESSION['error'] = "Budget category name is required!";
         } elseif (!is_numeric($budget_amount) || $budget_amount <= 0) {
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $budget_amount = (float)$budget_amount;
             $total_allowance = $user->getTotalAllowance($user_id);
             $current_budgets_sum = $budget->sumAllBudgets($user_id);
-            
+
             if ($total_allowance && ($current_budgets_sum + $budget_amount) > $total_allowance['amount']) {
                 $_SESSION['error'] = "Adding this budget would exceed your total allowance!";
             } else {
@@ -98,6 +98,7 @@ if ($amount) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,6 +108,7 @@ if ($amount) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <div class="app-container">
         <!-- Modern Navigation -->
@@ -222,7 +224,7 @@ if ($amount) {
                     $spent_expense = $spent_expense ?: 0;
                     $remaining_expense = $budget_amount - $spent_expense;
                     $percentage = ($spent_expense / $budget_amount) * 100;
-                    
+
                     if ($remaining_expense < 0) {
                         $error_message = "Warning: Remaining expense exceeds budget amount!";
                         $percentage = 100;
@@ -236,26 +238,26 @@ if ($amount) {
                         </script>";
                     }
                     ?>
-                    
+
                     <div class="budget-card">
                         <div class="budget-header">
                             <div class="budget-title"><?= htmlspecialchars($category['budget_category']) ?></div>
                             <div class="budget-amount">₱<?= number_format($category['amount'], 2) ?></div>
                         </div>
-                        
+
                         <div class="progress-container">
                             <div class="progress-bar">
                                 <div class="progress-fill" style="width: <?= $percentage ?>%"></div>
                             </div>
                         </div>
-                        
+
                         <div class="budget-stats">
                             <div class="spent">₱<?= number_format($spent_expense, 2) ?> spent</div>
                             <div class="remaining <?= $remaining_expense < 0 ? 'negative' : '' ?>">
                                 ₱<?= number_format($remaining_expense, 2) ?> remaining
                             </div>
                         </div>
-                        
+
                         <div class="budget-actions">
                             <button class="btn-icon btn-edit" onclick="toggleEditForm(<?= $category['budget_id'] ?>)">
                                 <i class="fas fa-edit"></i>
@@ -264,7 +266,7 @@ if ($amount) {
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
-                        
+
                         <!-- Edit Form -->
                         <div id="edit-form-<?= $category['budget_id'] ?>" class="edit-form" style="display: none;">
                             <form method="post" action="handle_budget.php">
@@ -433,7 +435,7 @@ if ($amount) {
                             <div class="form-group">
                                 <label>Budget Category</label>
                                 <select name="category" required>
-                                    <?php 
+                                    <?php
                                     $budget_category = $DB_con->query("SELECT * FROM budget WHERE user_id = $user_id");
                                     while ($category = $budget_category->fetch(PDO::FETCH_ASSOC)): ?>
                                         <option value="<?= htmlspecialchars($category['budget_category']) ?>">
@@ -461,9 +463,18 @@ if ($amount) {
         // Toggle mobile menu
         const navToggle = document.querySelector('.nav-toggle');
         const navList = document.querySelector('.nav-list');
-        
-        navToggle.addEventListener('click', () => {
+        const navHeader = document.querySelector('.nav-header');
+
+        navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             navList.classList.toggle('show');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navList.contains(e.target) && e.target !== navToggle) {
+                navList.classList.remove('show');
+            }
         });
 
         // Toggle edit form
@@ -535,4 +546,5 @@ if ($amount) {
         };
     </script>
 </body>
+
 </html>

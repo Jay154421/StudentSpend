@@ -29,6 +29,11 @@ body {
     font-family: var(--fontfamily);
     font-weight: 600;
 }
+
+h2 {
+    color: var(--primary-color);
+}
+
 .form-container input {
     width: 100%;
     padding: 10px;
