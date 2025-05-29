@@ -38,6 +38,7 @@ body {
   flex-direction: column;
   transition: var(--transition);
   z-index: 100;
+  position: relative;
 }
 
 .nav-header {
@@ -49,6 +50,8 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  position: relative;
+  cursor: pointer;
 }
 
 .nav-image {
@@ -57,6 +60,11 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--secondary-color);
+  transition: var(--transition);
+}
+
+.profile:hover .nav-image {
+  transform: scale(1.05);
 }
 
 .profile-info h4 {
@@ -81,6 +89,15 @@ body {
   color: var(--primary-color);
   cursor: pointer;
   margin-top: 15px;
+  transition: var(--transition);
+}
+
+.nav-toggle:hover {
+  transform: rotate(90deg);
+}
+
+.nav-toggle.active {
+  transform: rotate(90deg);
 }
 
 .nav-list {
@@ -100,11 +117,30 @@ body {
   color: #555;
   text-decoration: none;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-list a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: var(--transition);
+}
+
+.nav-list a:hover::after,
+.nav-list a.active::after {
+  width: 100%;
 }
 
 .nav-list a i {
   width: 20px;
   text-align: center;
+  transition: var(--transition);
 }
 
 .nav-list a:hover {
@@ -112,9 +148,59 @@ body {
   color: var(--primary-color);
 }
 
+.nav-list a:hover i {
+  transform: translateX(3px);
+}
+
 .nav-list a.active {
   background-color: var(--primary-color);
   color: white;
+  font-weight: 600;
+  box-shadow: inset 4px 0 0 rgba(255, 255, 255, 0.3);
+}
+
+.nav-list a.active i {
+  color: white;
+}
+
+.logout-btn {
+  margin-top: auto;
+  color: var(--danger-color) !important;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 107, 107, 0.1) !important;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+  padding: 10px 0;
+  z-index: 10;
+}
+
+.profile:hover .profile-dropdown {
+  display: block;
+}
+
+.profile-dropdown a {
+  display: block;
+  padding: 8px 20px;
+  color: #555;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.profile-dropdown a:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .logout-btn {
@@ -274,7 +360,7 @@ body {
   .modern-nav {
     width: 240px;
   }
-  
+
   .stats-container {
     flex-direction: column;
   }
@@ -284,45 +370,45 @@ body {
   .app-container {
     flex-direction: column;
   }
-  
+
   .modern-nav {
     width: 100%;
     position: fixed;
     height: auto;
     padding: 15px;
   }
-  
+
   .nav-list {
     display: none;
     padding: 15px 0;
   }
-  
+
   .nav-list.show {
     display: flex;
   }
-  
+
   .nav-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 15px;
   }
-  
+
   .nav-toggle {
     display: block;
   }
-  
+
   .main-content {
     margin-top: 80px;
     padding: 20px;
   }
-  
+
   .header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .date-display {
     align-self: flex-end;
   }
@@ -334,13 +420,13 @@ body {
     text-align: center;
     gap: 15px;
   }
-  
+
   .chart-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
-  
+
   .custom-select {
     width: 100%;
   }

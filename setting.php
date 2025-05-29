@@ -4,7 +4,7 @@ require_once './Database/dbconfig.php';
 // Process form submissions before any output
 if (!$user->is_loggedin()) {
   $user->redirect('index.php');
-   exit();
+  exit();
 }
 
 $user_id = $_SESSION['user_session'];
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn-password'])) {
           <?php if ($photo) { ?>
             <img class="nav-image" src="./image/<?= $photo['photo'] ?>">
           <?php } else { ?>
-            <img src="asset/profile.png" alt="Profile">
+            <img class="nav-image" src="asset/profile.png" alt="Profile">
           <?php } ?>
           <div class="profile-info">
             <h4><?= $name['username'] ?></h4>
