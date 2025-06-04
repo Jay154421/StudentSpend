@@ -381,6 +381,23 @@ body {
   font-weight: 500;
 }
 
+/* Expense Table Actions */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+td.actions {
+  padding: 8px;
+}
+
+/* Ensure buttons are properly aligned */
+.btn-icon {
+  width: 32px;
+  height: 32px;
+}
+
 .remaining.negative {
   color: var(--danger-color);
 }
