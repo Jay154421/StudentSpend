@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Get data for display
 $all_category = $DB_con->query("SELECT * FROM budget WHERE user_id = $user_id");
-$all_expense = $DB_con->query("SELECT * FROM expense WHERE user_id = $user_id");
+$all_expense = $DB_con->query("SELECT * FROM expense WHERE user_id = $user_id ORDER BY name DESC");
 $amount = $user->getTotalAllowance($user_id);
 $total_budgets = $budget->sumAllBudgets($user_id);
 
@@ -214,6 +214,84 @@ if ($amount) {
                 </button>
             </div>
 
+            <!-- Modal for Edit Budget -->
+            <div id="editBudgetModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Edit Budget</h2>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="handle_budget.php">
+                            <input type="hidden" name="budget_id" id="edit_budget_id">
+                            <div class="form-group">
+                                <label>Category Name</label>
+                                <input type="text" name="budget_category" id="edit_budget_category" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input type="number" step="0.01" name="amount" id="edit_budget_amount" required>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="btn-update" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <button type="button" class="btn btn-secondary close">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Edit Expense -->
+            <div id="editExpenseModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Edit Expense</h2>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="handle_expense.php" method="post">
+                            <input type="hidden" name="expense_id" id="edit_expense_id">
+                            <div class="form-group">
+                                <label>Expense Name</label>
+                                <input name="expense_name" id="edit_expense_name" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount</label>
+                                <input name="expense_amount" id="edit_expense_amount" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Budget Category</label>
+                                <select name="category" id="edit_expense_category" required>
+                                    <?php
+                                    $budget_category = $DB_con->query("SELECT * FROM budget WHERE user_id = $user_id");
+                                    while ($category = $budget_category->fetch(PDO::FETCH_ASSOC)): ?>
+                                        <option value="<?= htmlspecialchars($category['budget_category']) ?>">
+                                            <?= htmlspecialchars($category['budget_category']) ?>
+                                        </option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" name="expense_date" id="edit_expense_date" required>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="btn-expense_update" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <button type="button" class="btn btn-secondary close">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Budget Cards Grid -->
             <div class="budget-grid">
                 <?php while ($category = $all_category->fetch(PDO::FETCH_ASSOC)): ?>
@@ -259,35 +337,16 @@ if ($amount) {
                         </div>
 
                         <div class="budget-actions">
-                            <button class="btn-icon btn-edit" onclick="toggleEditForm(<?= $category['budget_id'] ?>)">
+                            <button class="btn-icon btn-edit" onclick="openEditBudgetModal(
+                                <?= $category['budget_id'] ?>, 
+                                '<?= htmlspecialchars($category['budget_category']) ?>', 
+                                <?= htmlspecialchars($category['amount']) ?>
+                            )">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn-icon btn-delete" onclick="confirmDelete(<?= $category['budget_id'] ?>)">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
-                        </div>
-
-                        <!-- Edit Form -->
-                        <div id="edit-form-<?= $category['budget_id'] ?>" class="edit-form" style="display: none;">
-                            <form method="post" action="handle_budget.php">
-                                <input type="hidden" name="budget_id" value="<?= $category['budget_id'] ?>">
-                                <div class="form-group">
-                                    <label>Category Name</label>
-                                    <input type="text" name="budget_category" value="<?= htmlspecialchars($category['budget_category']) ?>" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Amount</label>
-                                    <input type="number" step="0.01" name="amount" value="<?= htmlspecialchars($category['amount']) ?>" required>
-                                </div>
-                                <div class="form-actions">
-                                    <button type="submit" name="btn-update" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Update
-                                    </button>
-                                    <button type="button" onclick="toggleEditForm(<?= $category['budget_id'] ?>)" class="btn btn-secondary">
-                                        <i class="fas fa-times"></i> Cancel
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -317,6 +376,7 @@ if ($amount) {
                                 <th>Expense Name</th>
                                 <th>Amount</th>
                                 <th>Date</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -326,6 +386,20 @@ if ($amount) {
                                     <td><?= htmlspecialchars($expenses['name']) ?></td>
                                     <td>₱<?= number_format($expenses['amount'], 2) ?></td>
                                     <td><?= htmlspecialchars($expenses['date']) ?></td>
+                                    <td class="actions">
+                                        <button class="btn-icon btn-edit" onclick="openEditExpenseModal(
+                                            <?= $expenses['expense_id'] ?>, 
+                                            '<?= htmlspecialchars($expenses['name']) ?>', 
+                                            '<?= htmlspecialchars($expenses['amount']) ?>', 
+                                            '<?= htmlspecialchars($expenses['category']) ?>',
+                                            '<?= htmlspecialchars($expenses['date']) ?>'
+                                        )">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon btn-delete" onclick="confirmDeleteExpense(<?= $expenses['expense_id'] ?>)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>
@@ -477,12 +551,6 @@ if ($amount) {
             }
         });
 
-        // Toggle edit form
-        function toggleEditForm(budgetId) {
-            const form = document.getElementById(`edit-form-${budgetId}`);
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
         // Confirm delete
         function confirmDelete(budgetId) {
             Swal.fire({
@@ -544,6 +612,61 @@ if ($amount) {
                 });
             }
         };
+
+        // Open edit budget modal with data
+        function openEditBudgetModal(id, category, amount) {
+            document.getElementById('edit_budget_id').value = id;
+            document.getElementById('edit_budget_category').value = category;
+            document.getElementById('edit_budget_amount').value = amount;
+
+            const modal = document.getElementById('editBudgetModal');
+            modal.classList.add('show');
+        }
+
+        // Open edit expense modal with data
+        function openEditExpenseModal(id, name, amount, category, date) {
+            document.getElementById('edit_expense_id').value = id;
+            document.getElementById('edit_expense_name').value = name;
+            document.getElementById('edit_expense_amount').value = amount;
+            document.getElementById('edit_expense_category').value = category;
+            document.getElementById('edit_expense_date').value = date;
+
+            const modal = document.getElementById('editExpenseModal');
+            modal.classList.add('show');
+        }
+
+        // Confirm expense deletion
+        function confirmDeleteExpense(expenseId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#06ab99',
+                cancelButtonColor: '#ff6b6b',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = 'handle_expense.php';
+
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'expense_id';
+                    input.value = expenseId;
+                    form.appendChild(input);
+
+                    const btn = document.createElement('input');
+                    btn.type = 'hidden';
+                    btn.name = 'btn-expense_delete';
+                    form.appendChild(btn);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
     </script>
 </body>
 
